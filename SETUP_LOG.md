@@ -71,10 +71,17 @@ Após a configuração inicial, o plano foi alterado para desenvolver uma API we
 - A aplicação FastAPI foi instanciada.
 - Foi implementado o endpoint `POST /gerar-csv`, que recebe a configuração, orquestra a geração dos dados e retorna o arquivo CSV para download.
 
-### Fase 6: Teste da API
-- O servidor `uvicorn` foi iniciado para executar a aplicação.
-- Um teste de integração foi realizado utilizando `curl` para enviar uma requisição `POST` com o arquivo `config/exemplo.json` para o endpoint `/gerar-csv`.
-- A API retornou com sucesso um arquivo CSV, que foi salvo como `meu_arquivo_gerado.csv`.
-- A verificação do arquivo confirmou que ele continha 101 linhas (1 de cabeçalho e 100 de dados), validando o sucesso da implementação do MVP.
+### Fase 6: Testes (Manual e Automatizado)
+- **Teste Manual:**
+  - O servidor `uvicorn` foi iniciado para executar a aplicação.
+  - Um teste de integração foi realizado utilizando `curl` para enviar uma requisição `POST` com o arquivo `config/exemplo.json` para o endpoint `/gerar-csv`.
+  - A API retornou com sucesso um arquivo CSV, que foi salvo como `meu_arquivo_gerado.csv`.
+  - A verificação do arquivo confirmou que ele continha 101 linhas (1 de cabeçalho e 100 de dados), validando o sucesso da implementação do MVP.
+- **Testes Automatizados:**
+  - A dependência `httpx` foi adicionada para suportar os testes de API.
+  - O arquivo `tests/test_api.py` foi criado com testes de integração para a API, cobrindo tanto o caminho feliz quanto os casos de falha de validação.
+  - O arquivo `tests/test_core.py` foi criado com testes unitários para a lógica de negócio (geradores, fábrica e serviço).
+  - Um bug no teste `test_sistema_gerador` foi identificado e corrigido (o desvio padrão não pode ser zero).
+  - Todos os 7 testes foram executados e passaram com sucesso, garantindo a confiabilidade do MVP.
 
 O MVP da API está funcional e concluído.
