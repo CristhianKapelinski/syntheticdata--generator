@@ -1,7 +1,3 @@
-Aqui está uma proposta de README completo para o seu projeto, incorporando as informações dos arquivos, o documento de requisitos e o diagrama de arquitetura em Mermaid.
-
------
-
 # Gerador de Dados Sintéticos Flexível
 
 ## 1\. 📜 Introdução
