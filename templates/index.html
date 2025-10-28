@@ -58,7 +58,12 @@
                     <div x-show="coluna.configGerador.tipoGerador === 'regex'">
                          <div class="mb-3">
                             <label :for="'regex-expressao-' + index" class="form-label">Expressão Regular:</label>
-                            <input type="text" :id="'regex-expressao-' + index" x-model="coluna.configGerador.expressao" class="form-control">
+                            <input type="text" :id="'regex-expressao-' + index" x-model="coluna.configGerador.expressao" class="form-control" placeholder="ex: \d{3}\.\d{3}\.\d{3}-\d{2}">
+                            <div class="form-text">
+                                Use uma sintaxe de Expressão Regular (regex) válida em Python.
+                                Por exemplo, para um CPF, você pode usar <code>\d{3}\.\d{3}\.\d{3}-\d{2}</code>.
+                                Para um CEP, <code>\d{5}-\d{3}</code>.
+                            </div>
                             <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.expressao`]"></div>
                          </div>
                     </div>
@@ -81,14 +86,14 @@
                      <div x-show="coluna.configGerador.tipoGerador === 'linear'">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label :for="'linear-angular-' + index" class="form-label">Coeficiente Angular (m):</label>
-                                <input type="number" step="any" :id="'linear-angular-' + index" x-model.number="coluna.configGerador.coeficienteAngular" class="form-control">
-                                <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.coeficienteAngular`]"></div>
+                                <label :for="'linear-inicial-' + index" class="form-label">Valor Inicial:</label>
+                                <input type="number" step="any" :id="'linear-inicial-' + index" x-model.number="coluna.configGerador.valorInicial" class="form-control">
+                                <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.valorInicial`]"></div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label :for="'linear-linear-' + index" class="form-label">Coeficiente Linear (b):</label>
-                                <input type="number" step="any" :id="'linear-linear-' + index" x-model.number="coluna.configGerador.coeficienteLinear" class="form-control">
-                                 <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.coeficienteLinear`]"></div>
+                                <label :for="'linear-incremento-' + index" class="form-label">Incremento:</label>
+                                <input type="number" step="any" :id="'linear-incremento-' + index" x-model.number="coluna.configGerador.incremento" class="form-control">
+                                 <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.incremento`]"></div>
                             </div>
                         </div>
                     </div>
@@ -221,7 +226,8 @@
                         }
                         a.download = filename;
                         document.body.appendChild(a);
-                        a.remove();
+                        a.click(); // Dispara o download
+                        a.remove(); // Remove o elemento após o clique
                         window.URL.revokeObjectURL(url);
                         this.sucessoMsg = `Arquivo '${filename}' gerado com sucesso!`;
                     }

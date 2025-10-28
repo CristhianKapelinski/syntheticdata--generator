@@ -97,15 +97,41 @@ Você pode usar o endpoint `POST /gerar-csv` para gerar dados. O corpo da requis
 }
 ```
 
-**Exemplo de requisição com `curl`:**
 
-```bash
-curl -X 'POST' \
-  'http://127.0.0.1:8000/gerar-csv' \
-  -H 'Content-Type: application/json' \
-  -d '@config/exemplo.json' \
-  -o dados_gerados.csv
-```
+
+    *   Exemplo: `123e4567-e89b-12d3-a456-426614174000`
+
+## Exemplos de Expressões Regulares
+
+Aqui estão alguns exemplos de expressões regulares que você pode usar para gerar dados sintéticos:
+
+*   **CPF (Cadastro de Pessoas Físicas):**
+    *   Regex: `\d{3}\.\d{3}\.\d{3}-\d{2}`
+    *   Exemplo: `123.456.789-00`
+
+*   **CEP (Código de Endereçamento Postal):**
+    *   Regex: `\d{5}-\d{3}`
+    *   Exemplo: `12345-678`
+
+*   **Endereço IPv4:**
+    *   Regex: `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`
+    *   Exemplo: `192.168.0.1`
+
+*   **Endereço de E-mail:**
+    *   Regex: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`
+    *   Exemplo: `exemplo@dominio.com`
+
+*   **Número de Telefone (Brasil, com DDD):**
+    *   Regex: `\(\d{2}\)\s\d{4,5}-\d{4}`
+    *   Exemplo: `(11) 98765-4321`
+
+*   **Data (dd/mm/aaaa):**
+    *   Regex: `^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}`
+    *   Exemplo: `25/12/2024`
+
+*   **UUID (Universally Unique Identifier):**
+    *   Regex: `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}`
+    *   Exemplo: `123e4567-e89b-12d3-a456-426614174000`
 
 ## Testes
 
