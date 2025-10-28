@@ -1,147 +1,178 @@
+Aqui está uma proposta de README completo para o seu projeto, incorporando as informações dos arquivos, o documento de requisitos e o diagrama de arquitetura em Mermaid.
+
+-----
+
 # Gerador de Dados Sintéticos Flexível
 
-Este projeto implementa uma API FastAPI para a geração flexível de dados sintéticos, baseada em configurações definidas pelo usuário. A API permite gerar dados seguindo diferentes padrões (Regex, Distribuição Gaussiana, Tendência Linear) e exportá-los em formato CSV, com opções de personalização de delimitadores e separadores decimais.
+## 1\. 📜 Introdução
 
-## Funcionalidades (Requisitos Implementados)
+O **Gerador de Dados Sintéticos Flexível** é uma ferramenta de software robusta, projetada para criar conjuntos de dados sintéticos em formato CSV com alta configurabilidade. O projeto atende à necessidade de desenvolvedores, testadores, analistas de dados e pesquisadores, fornecendo uma maneira rápida e confiável de gerar dados para testes de software, análise de desempenho ou simulações.
 
--   **RF01: Definir Estrutura do CSV:** O usuário pode definir o número de linhas e as colunas do CSV, especificando o tipo de gerador para cada coluna.
--   **RF02: Gerador de Dados Regex:** Geração de strings baseadas em expressões regulares.
--   **RF03: Gerador de Dados Gaussianos:** Geração de números com base em uma distribuição normal (média e desvio padrão).
--   **RF04: Exportar para CSV:** Os dados gerados são exportados em formato CSV.
--   **RF05: Validação de Configurações:** Todas as configurações são validadas usando Pydantic, garantindo a integridade dos dados de entrada (ex: regex válida, desvio padrão positivo).
--   **RF06: Gerador de Dados Lineares:** Geração de números com base em uma tendência linear (valor inicial e incremento).
--   **RF09: Delimitadores e Separadores Decimais:** Personalização do delimitador de colunas e do separador decimal no arquivo CSV.
+A aplicação é construída como uma moderna aplicação web, utilizando:
 
-## Arquitetura
+  * **Backend:** **FastAPI** para uma API de alta performance.
+  * **Frontend:** Uma interface reativa e amigável construída com **Alpine.js** e **Bootstrap**, que se comunica com o backend sem a necessidade de recarregar a página.
 
-O projeto segue uma arquitetura limpa e desacoplada, utilizando Padrões de Projeto como:
--   **Data Transfer Object (DTO):** Modelos Pydantic para validação e tipagem das configurações.
--   **Strategy Pattern:** Para os diferentes tipos de geradores de dados (Regex, Gaussiano, Linear).
--   **Factory Method:** Para instanciar o gerador correto com base na configuração.
--   **Service Layer:** Uma camada de serviço (`SistemaGerador`) que orquestra a geração dos dados.
+O foco principal é permitir que o usuário defina a estrutura de um arquivo CSV e, em seguida, popule cada coluna usando diferentes "estratégias" de geração, como padrões de Expressão Regular (Regex) ou distribuições estatísticas.
 
-## Configuração do Ambiente
+## 2\. 🚀 Principais Funcionalidades
 
-Para configurar o ambiente de desenvolvimento, siga os passos:
+O sistema implementa um conjunto abrangente de requisitos funcionais e não funcionais, garantindo flexibilidade e confiabilidade.
 
-1.  **Clone o repositório:**
+  * **Definição Estrutural Completa (RF01):** Permite ao usuário definir o número de linhas, nomes de colunas e a estrutura geral do CSV.
+  * **Gerador de Dados por Regex (RF02):** Gera dados textuais que correspondem perfeitamente a qualquer padrão de Expressão Regular (Regex) fornecido.
+  * **Gerador de Dados Gaussianos (RF03):** Gera dados numéricos que seguem uma distribuição estatística normal (Gaussiana), com média e desvio padrão configuráveis.
+  * **Gerador de Dados Linear (RF06):** Gera dados numéricos que seguem uma tendência linear (ex: uma sequência com incremento fixo).
+  * **Validação de Entrada Robusta (RF05):** O sistema valida todas as configurações antes da geração. Isso inclui a verificação da sintaxe de expressões regulares e a garantia de que parâmetros estatísticos (como o desvio padrão) sejam válidos (ex: \> 0).
+  * **Configuração de Formato (RF09):** Permite ao usuário configurar o caractere delimitador de campo (ex: `,` ou `;`) e o separador decimal (ex: `.` ou `,`).
+  * **Interface de Usuário Reativa (RNF01):** Uma GUI intuitiva que permite ao usuário adicionar, configurar e remover colunas dinamicamente, sem recarregar a página.
+  * **Arquitetura Extensível (RF08, RNF07):** O design do sistema (baseado nos padrões *Strategy* e *Factory*) permite que novos tipos de geradores (ex: distribuição uniforme, exponencial) sejam adicionados com esforço mínimo.
+
+## 3\. 🛠️ Tech Stack
+
+| Categoria | Tecnologia | Propósito |
+| :--- | :--- | :--- |
+| **Backend** | **FastAPI** | Framework da API (ASGI). |
+| | **Pydantic** | Validação de dados e modelos de configuração. |
+| | **Numpy** | Geração de dados estatísticos (Gaussiano). |
+| | **Rstr** | Geração de dados baseados em Regex. |
+| | **Uvicorn** | Servidor ASGI para rodar o FastAPI. |
+| **Frontend** | **Alpine.js** | Reatividade e gerenciamento de estado da UI. |
+| | **Bootstrap** | Layout e componentes de UI. |
+| | **Jinja2** | Renderização do template HTML inicial. |
+| **Testes** | **Pytest** | Estrutura de testes unitários e de integração. |
+| | **HTTPX** | Cliente HTTP para testes de API (`TestClient`). |
+| **DevOps** | **Poetry** | Gerenciamento de dependências e pacotes. |
+| | **Ruff** | Linter e formatador de código Python. |
+
+## 4\. 🏛️ Diagrama da Arquitetura (Mermaid)
+
+Este diagrama ilustra o fluxo de dados e a arquitetura de componentes da aplicação, desde a interação do usuário até a geração do arquivo final.
+
+```mermaid
+graph TD
+    subgraph Frontend_Navegador ["Frontend (Navegador)"]
+        A[Usuário] --> B["index.html | Alpine.js"]
+        B -- "1. Monta JSON da Configuração" --> C{"fetch API"}
+        C -- "7. Recebe CSV/Erro" --> D["Download do CSV ou Exibe Erro"]
+    end
+
+    subgraph Backend_Servidor ["Backend (Servidor FastAPI)"]
+        C -- "2. POST /gerar-csv" --> E["API: main.py"]
+        E -- "3. Valida com" --> F["Modelos: modelos.py (Pydantic)"]
+        F -- "Erro de Validação 422" --> C
+        
+        E -- "4. Solicita Geração" --> G["Serviço: SistemaGerador (Fachada)"]
+        G -- "5. Obtém Geradores" --> H["Factory: get_gerador()"]
+        
+        subgraph Padrao_Strategy ["Padrão Strategy"]
+            H -- "regex" --> I[GeradorRegex]
+            H -- "gaussiano" --> J[GeradorGaussiano]
+            H -- "linear" --> K[GeradorLinear]
+        end
+
+        G -- "6. Gera Dados (em memória)" --> G
+        E -- "6.1 Converte p/ String" --> L["Serializador: utils_csv.py"]
+        E -- "6.2 Retorna StreamingResponse" --> C
+    end
+```
+
+## 5\. 📦 Instalação
+
+### Pré-requisitos
+
+  * Python 3.11+
+  * [Poetry](https://www.google.com/search?q=https://python-poetry.org/docs/%23installation) (Gerenciador de dependências)
+
+### Passos
+
+1.  Clone o repositório:
+
     ```bash
-    git clone https://github.com/CristhianKapelinski/syntheticdata--generator
-    cd syntheticdata--generator
+    git clone https://seu-repositorio-aqui.com/syntheticdata-generator.git
+    cd syntheticdata-generator
     ```
 
-2.  **Crie e ative o ambiente virtual com Poetry:**
+2.  Instale as dependências usando o Poetry:
+
     ```bash
-    python3 -m venv .venv
-    .venv/bin/pip install poetry
-    .venv/bin/poetry install
+    poetry install
     ```
 
-3.  **Instale as dependências:**
-    ```bash
-    .venv/bin/poetry install
-    ```
+    *(Isso criará um ambiente virtual e instalará todas as dependências listadas no `pyproject.toml` e `poetry.lock`)*
 
-## Como Executar a API
+## 6\. ▶️ Executando a Aplicação
 
-Para iniciar o servidor FastAPI:
+Para iniciar o servidor de desenvolvimento (com *hot-reload*), execute o seguinte comando na raiz do projeto:
 
 ```bash
-.venv/bin/poetry run uvicorn src.gerador_dados.main:app --reload
+poetry run uvicorn src.gerador_dados.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-A API estará disponível em `http://127.0.0.1:8000`.
+A aplicação estará disponível em: **[http://localhost:8000](https://www.google.com/search?q=http://localhost:8000)**
 
-## Documentação da API (Swagger UI)
+## 7\. 👨‍💻 Como Usar (Interface Web)
 
-Acesse a documentação interativa da API em seu navegador:
+1.  Acesse **[http://localhost:8000](https://www.google.com/search?q=http://localhost:8000)** no seu navegador.
+2.  **Configuração Geral:** Defina o número de linhas desejado e, opcionalmente, altere o delimitador (ex: `;`) e o separador decimal (ex: `,`).
+3.  **Configuração das Colunas:**
+      * O formulário começa com uma coluna.
+      * Preencha o **Nome da Coluna**.
+      * Selecione o **Tipo de Gerador** (Regex, Gaussiano ou Linear).
+      * Campos de parâmetros específicos aparecerão (ex: "Expressão Regular" ou "Média" e "Desvio Padrão").
+4.  Clique em **"+ Adicionar Coluna"** para adicionar quantas colunas forem necessárias.
+5.  Clique em **"Gerar e Baixar CSV"**.
+6.  O sistema irá validar sua entrada.
+      * **Se houver erro:** Uma mensagem vermelha aparecerá indicando o problema (ex: "Expressão regular com sintaxe inválida").
+      * **Se houver sucesso:** O download do arquivo `dados_sinteticos.csv` iniciará automaticamente.
 
-[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+## 8\. 📁 Estrutura do Projeto
 
-## Como Usar a API (Exemplo)
+O código-fonte é modular e segue os princípios de separação de responsabilidades.
 
-Você pode usar o endpoint `POST /gerar-csv` para gerar dados. O corpo da requisição deve ser um JSON que segue a estrutura definida nos modelos Pydantic.
-
-**Exemplo de `config/exemplo.json`:**
-
-```json
-{
-  "numLinhas": 100,
-  "colunas": [
-    {
-      "nome": "ID_USUARIO",
-      "configGerador": {
-        "tipoGerador": "regex",
-        "expressao": "USER_[A-Z0-9]{8}"
-      }
-    },
-    {
-      "nome": "PONTUACAO_RISCO",
-      "configGerador": {
-        "tipoGerador": "gaussiano",
-        "media": 150.5,
-        "desvioPadrao": 25.0
-      }
-    },
-    {
-      "nome": "SEQUENCIA_LINEAR",
-      "configGerador": {
-        "tipoGerador": "linear",
-        "valorInicial": 10,
-        "incremento": 0.5
-      }
-    }
-  ],
-  "delimitador": ";",
-  "separadorDecimal": ","
-}
+```
+.
+├── config/
+│   └── exemplo.json       # Exemplo de configuração de entrada
+├── src/
+│   └── gerador_dados/
+│       ├── __init__.py
+│       ├── geradores.py   # Padrão Strategy: GeradorRegex, GeradorGaussiano, etc.
+│       ├── main.py        # API (Controller): Endpoints FastAPI
+│       ├── modelos.py     # Modelos de dados e validação (Pydantic)
+│       ├── servicos.py    # Lógica de Orquestração (Facade, Factory)
+│       └── utils_csv.py   # Serializador para o formato CSV
+├── static/                # (Opcional) CSS/JS estáticos
+├── templates/
+│   ├── base.html          # Template HTML base
+│   └── index.html         # Template do frontend (com Alpine.js)
+├── tests/
+│   ├── test_api.py        # Testes de integração da API
+│   └── test_core.py       # Testes unitários (Geradores, Factory)
+├── poetry.lock            # Dependências exatas
+├── pyproject.toml         # Definições do projeto e dependências (Poetry)
+└── README.md              # Este arquivo
 ```
 
+## 9\. 🧪 Executando os Testes
 
-
-    *   Exemplo: `123e4567-e89b-12d3-a456-426614174000`
-
-## Exemplos de Expressões Regulares
-
-Aqui estão alguns exemplos de expressões regulares que você pode usar para gerar dados sintéticos:
-
-*   **CPF (Cadastro de Pessoas Físicas):**
-    *   Regex: `\d{3}\.\d{3}\.\d{3}-\d{2}`
-    *   Exemplo: `123.456.789-00`
-
-*   **CEP (Código de Endereçamento Postal):**
-    *   Regex: `\d{5}-\d{3}`
-    *   Exemplo: `12345-678`
-
-*   **Endereço IPv4:**
-    *   Regex: `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`
-    *   Exemplo: `192.168.0.1`
-
-*   **Endereço de E-mail:**
-    *   Regex: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`
-    *   Exemplo: `exemplo@dominio.com`
-
-*   **Número de Telefone (Brasil, com DDD):**
-    *   Regex: `\(\d{2}\)\s\d{4,5}-\d{4}`
-    *   Exemplo: `(11) 98765-4321`
-
-*   **Data (dd/mm/aaaa):**
-    *   Regex: `^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}`
-    *   Exemplo: `25/12/2024`
-
-*   **UUID (Universally Unique Identifier):**
-    *   Regex: `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}`
-    *   Exemplo: `123e4567-e89b-12d3-a456-426614174000`
-
-## Testes
-
-Para executar a suíte de testes automatizados (unitários e de integração):
+Para garantir a qualidade e a confiabilidade do código, execute a suíte de testes com o Pytest:
 
 ```bash
-.venv/bin/poetry run pytest
+poetry run pytest
 ```
 
-## Próximos Passos (Evolução)
+Os testes cobrem:
 
--   Implementação de novas distribuições de dados (RF08).
--   Melhorias na interface do usuário ou na experiência do desenvolvedor.
+  * **Testes Unitários (`test_core.py`):** Validam cada gerador (Strategy) isoladamente e a função `get_gerador` (Factory).
+  * **Testes de Integração (`test_api.py`):** Testam a API (`/gerar-csv`) de ponta a ponta, incluindo o "caminho feliz", falhas de validação (RF05) e a correta aplicação de delimitadores (RF09).
+
+## 10\. 👥 Autores
+
+  * **Cristhian Eduardo Kapelinski de Avilla** 
+  * **Rafael da Silva Moral** 
+  * **Lucas Correa Rodrigues** 
+
+## 11\. 📄 Licença
+
+Este projeto é distribuído sob a Licença APACHE.
