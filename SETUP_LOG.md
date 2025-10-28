@@ -82,6 +82,14 @@ Após a configuração inicial, o plano foi alterado para desenvolver uma API we
   - O arquivo `tests/test_api.py` foi criado com testes de integração para a API, cobrindo tanto o caminho feliz quanto os casos de falha de validação.
   - O arquivo `tests/test_core.py` foi criado com testes unitários para a lógica de negócio (geradores, fábrica e serviço).
   - Um bug no teste `test_sistema_gerador` foi identificado e corrigido (o desvio padrão não pode ser zero).
-  - Todos os 7 testes foram executados e passaram com sucesso, garantindo a confiabilidade do MVP.
+  - A suíte de testes inicial (7 testes) foi executada com sucesso.
 
-O MVP da API está funcional e concluído.
+### Fase 7: Evolução - Gerador Linear (RF06)
+- O modelo `ConfigGeradorLinear` foi adicionado ao `src/gerador_dados/modelos.py` e incluído na união `TipoGeradorConfig`.
+- A nova estratégia `GeradorLinear` foi implementada em `src/gerador_dados/geradores.py`.
+- A fábrica `get_gerador` em `src/gerador_dados/servicos.py` foi atualizada para instanciar o `GeradorLinear`.
+- Testes unitários para o `GeradorLinear` e para a fábrica foram adicionados em `tests/test_core.py`.
+- Um teste de integração para a API foi adicionado em `tests/test_api.py` para validar a geração de dados com o gerador linear.
+- Todos os 9 testes da suíte foram executados e passaram com sucesso, confirmando a correta implementação da nova funcionalidade.
+
+O projeto continua evoluindo com novas funcionalidades e cobertura de testes robusta.
