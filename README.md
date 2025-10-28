@@ -89,7 +89,7 @@ graph TD
 1.  Clone o repositório:
 
     ```bash
-    git clone [https://seu-repositorio-aqui.com/syntheticdata-generator.git](https://github.com/CristhianKapelinski/syntheticdata--generator)
+    git clone https://github.com/CristhianKapelinski/syntheticdata--generator
     cd syntheticdata-generator
     ```
 
