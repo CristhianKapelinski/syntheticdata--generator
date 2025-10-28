@@ -1,6 +1,9 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import StreamingResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 import io
+import os
 
 # Importa nossos modelos da Fase 1
 from .modelos import ConfiguracaoCSV
@@ -16,11 +19,18 @@ app = FastAPI(
     version="0.1.0 (MVP)"
 )
 
-@app.get("/")
-async def root():
-    """Endpoint de boas-vindas."""
-    return {"message": "Bem-vindo ao Gerador de Dados Sintéticos. Use o endpoint /gerar-csv."}
+# Configura a pasta de templates
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "..", "templates"))
 
+# Monta a pasta estática (opcional por enquanto, mas boa prática)
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "..", "static")), name="static")
+
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
+    """Serve a página HTML principal."""
+    # Passa o 'request' para o template, necessário pelo Jinja2Templates
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/gerar-csv")
 async def gerar_csv(config: ConfiguracaoCSV):

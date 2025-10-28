@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Configuração - Gerador de Dados{% endblock %}
+
+{% block content %}
+<div x-data="configuracaoForm()" x-cloak>
+    <form id="config-form" @submit.prevent="submeterFormulario">
+
+        <h2>Configuração Geral</h2>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="numLinhas" class="form-label">Número de Linhas:</label>
+                <input type="number" id="numLinhas" x-model.number="numLinhas" class="form-control" min="1" required>
+                <div class="invalid-feedback" x-show="erros.numLinhas" x-text="erros.numLinhas"></div>
+            </div>
+            <div class="col-md-4">
+                <label for="delimitador" class="form-label">Delimitador (1 caractere):</label>
+                <input type="text" id="delimitador" x-model="delimitador" class="form-control" maxlength="1" required pattern=".{1,1}">
+                 <div class="invalid-feedback" x-show="erros.delimitador" x-text="erros.delimitador"></div>
+            </div>
+            <div class="col-md-4">
+                <label for="separadorDecimal" class="form-label">Separador Decimal (1 caractere):</label>
+                <input type="text" id="separadorDecimal" x-model="separadorDecimal" class="form-control" maxlength="1" required pattern=".{1,1}">
+                 <div class="invalid-feedback" x-show="erros.separadorDecimal" x-text="erros.separadorDecimal"></div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Configuração das Colunas</h2>
+        <div x-show="erros.colunas" class="alert alert-danger" x-text="erros.colunas"></div>
+
+        <template x-for="(coluna, index) in colunas" :key="index">
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Coluna #<span x-text="index + 1"></span></span>
+                    <button type="button" class="btn btn-sm btn-danger" @click="removerColuna(index)" x-show="colunas.length > 1">Remover</button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label :for="'coluna-nome-' + index" class="form-label">Nome da Coluna:</label>
+                            <input type="text" :id="'coluna-nome-' + index" x-model="coluna.nome" class="form-control" required>
+                             <div class="invalid-feedback" x-show="erros[`colunas.${index}.nome`]"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label :for="'coluna-tipo-' + index" class="form-label">Tipo de Gerador:</label>
+                            <select :id="'coluna-tipo-' + index" x-model="coluna.configGerador.tipoGerador" class="form-select" required @change="resetarParametros(index)">
+                                <option value="">Selecione...</option>
+                                <option value="regex">Regex</option>
+                                <option value="gaussiano">Gaussiano</option>
+                                <option value="linear">Linear</option>
+                            </select>
+                            <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.tipoGerador`]"></div>
+                        </div>
+                    </div>
+
+                    <div x-show="coluna.configGerador.tipoGerador === 'regex'">
+                         <div class="mb-3">
+                            <label :for="'regex-expressao-' + index" class="form-label">Expressão Regular:</label>
+                            <input type="text" :id="'regex-expressao-' + index" x-model="coluna.configGerador.expressao" class="form-control">
+                            <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.expressao`]"></div>
+                         </div>
+                    </div>
+
+                    <div x-show="coluna.configGerador.tipoGerador === 'gaussiano'">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label :for="'gauss-media-' + index" class="form-label">Média:</label>
+                                <input type="number" step="any" :id="'gauss-media-' + index" x-model.number="coluna.configGerador.media" class="form-control">
+                                <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.media`]"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label :for="'gauss-desvio-' + index" class="form-label">Desvio Padrão (>0):</label>
+                                <input type="number" step="any" :id="'gauss-desvio-' + index" x-model.number="coluna.configGerador.desvioPadrao" class="form-control" min="0.000001">
+                                <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.desvioPadrao`]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div x-show="coluna.configGerador.tipoGerador === 'linear'">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label :for="'linear-angular-' + index" class="form-label">Coeficiente Angular (m):</label>
+                                <input type="number" step="any" :id="'linear-angular-' + index" x-model.number="coluna.configGerador.coeficienteAngular" class="form-control">
+                                <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.coeficienteAngular`]"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label :for="'linear-linear-' + index" class="form-label">Coeficiente Linear (b):</label>
+                                <input type="number" step="any" :id="'linear-linear-' + index" x-model.number="coluna.configGerador.coeficienteLinear" class="form-control">
+                                 <div class="invalid-feedback" x-show="erros[`colunas.${index}.configGerador.coeficienteLinear`]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <button type="button" class="btn btn-outline-primary mb-3" @click="adicionarColuna()">+ Adicionar Coluna</button>
+
+        <hr>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success btn-lg" :disabled="carregando">
+                <span x-show="!carregando">Gerar e Baixar CSV</span>
+                <span x-show="carregando" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span x-show="carregando"> Gerando...</span>
+            </button>
+        </div>
+
+        <div x-show="erroGeral" class="alert alert-danger mt-3" x-text="erroGeral"></div>
+        <div x-show="sucessoMsg" class="alert alert-success mt-3" x-text="sucessoMsg"></div>
+
+    </form>
+</div>
+
+<script>
+    function configuracaoForm() {
+        return {
+            numLinhas: 100,
+            delimitador: ',',
+            separadorDecimal: '.',
+            colunas: [ // Começa com uma coluna
+               { nome: '', configGerador: { tipoGerador: '', /* outros params vazios */ } }
+            ],
+            carregando: false,
+            erroGeral: '',
+            erros: {}, // Para erros de validação específicos
+            sucessoMsg: '',
+
+            // Função para adicionar uma nova coluna
+            adicionarColuna() {
+                this.colunas.push({ nome: '', configGerador: { tipoGerador: '' } });
+            },
+
+            // Função para remover uma coluna
+            removerColuna(index) {
+                this.colunas.splice(index, 1);
+            },
+
+            // Reseta parâmetros ao mudar tipo (evita enviar dados inválidos)
+            resetarParametros(index) {
+                const tipo = this.colunas[index].configGerador.tipoGerador;
+                // Mantém apenas o 'tipoGerador', limpa o resto
+                this.colunas[index].configGerador = { tipoGerador: tipo };
+            },
+
+            // Limpa erros antes de submeter
+            limparErros() {
+                this.erros = {};
+                this.erroGeral = '';
+                this.sucessoMsg = '';
+                 // Remove classes de erro dos inputs (exemplo básico)
+                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            },
+
+            // Função para submeter o formulário via Fetch API
+            async submeterFormulario() {
+                this.limparErros();
+                this.carregando = true;
+
+                // 1. Monta o payload JSON esperado pelo backend
+                const payload = {
+                    numLinhas: this.numLinhas,
+                    delimitador: this.delimitador,
+                    separadorDecimal: this.separadorDecimal,
+                    colunas: this.colunas.map(col => {
+                        // Limpa parâmetros nulos/vazios antes de enviar
+                        const configLimpa = { tipoGerador: col.configGerador.tipoGerador };
+                        for (const key in col.configGerador) {
+                            if (key !== 'tipoGerador' && col.configGerador[key] !== null && col.configGerador[key] !== undefined && col.configGerador[key] !== '') {
+                                configLimpa[key] = col.configGerador[key];
+                            }
+                        }
+                        return {
+                            nome: col.nome,
+                            configGerador: configLimpa
+                        };
+                    })
+                };
+
+                try {
+                    const response = await fetch('/gerar-csv', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'text/csv' // Indica que esperamos CSV
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        // Se for erro de validação (422)
+                        if (response.status === 422) {
+                            const errorData = await response.json();
+                            console.error("Erro de validação:", errorData);
+                            // Mapeia os erros para o objeto 'erros' do Alpine
+                            this.mapearErrosValidacao(errorData.detail);
+                            this.erroGeral = "Por favor, corrija os erros no formulário.";
+                        } else {
+                            // Outros erros (500, etc.)
+                            const errorText = await response.text();
+                            throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
+                        }
+                    } else {
+                        // 2. Sucesso: Pega o CSV como Blob e dispara o download
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        // Pega o nome do arquivo do header ou usa um padrão
+                        const disposition = response.headers.get('content-disposition');
+                        let filename = 'dados_sinteticos.csv';
+                        if (disposition && disposition.indexOf('attachment') !== -1) {
+                            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                            const matches = filenameRegex.exec(disposition);
+                            if (matches != null && matches[1]) {
+                              filename = matches[1].replace(/['"]/g, '');
+                            }
+                        }
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                        this.sucessoMsg = `Arquivo '${filename}' gerado com sucesso!`;
+                    }
+
+                } catch (error) {
+                    console.error('Erro ao submeter:', error);
+                    this.erroGeral = `Falha ao gerar CSV: ${error.message}`;
+                } finally {
+                    this.carregando = false;
+                }
+            },
+
+            // Mapeia erros de validação do FastAPI para o objeto 'erros'
+            mapearErrosValidacao(details) {
+                 this.erros = {}; // Limpa erros anteriores
+                 details.forEach(err => {
+                     // Constrói a chave baseada na localização do erro (loc)
+                     // Ex: ['body', 'colunas', 0, 'nome'] => 'colunas.0.nome'
+                     let key = err.loc.slice(1).join('.'); // Ignora 'body'
+                     this.erros[key] = err.msg;
+
+                     // Tenta adicionar classe de erro ao input correspondente (exemplo)
+                     let inputId = '';
+                     if (key.startsWith('colunas.')) {
+                        // Exemplo: colunas.0.configGerador.expressao
+                         const parts = key.split('.');
+                         const index = parts[1];
+                         const field = parts.slice(2).join('.'); // configGerador.expressao
+
+                         if (field === 'nome') inputId = `coluna-nome-${index}`;
+                         else if (field === 'configGerador.tipoGerador') inputId = `coluna-tipo-${index}`;
+                         else if (field === 'configGerador.expressao') inputId = `regex-expressao-${index}`;
+                         else if (field === 'configGerador.media') inputId = `gauss-media-${index}`;
+                         else if (field === 'configGerador.desvioPadrao') inputId = `gauss-desvio-${index}`;
+                         else if (field === 'configGerador.coeficienteAngular') inputId = `linear-angular-${index}`;
+                         else if (field === 'configGerador.coeficienteLinear') inputId = `linear-linear-${index}`;
+
+                     } else {
+                          inputId = key; // Para numLinhas, delimitador, separadorDecimal
+                     }
+
+                     const inputElement = document.getElementById(inputId);
+                     if (inputElement) {
+                         inputElement.classList.add('is-invalid');
+                     }
+                 });
+             }
+        };
+    }
+</script>
+{% endblock %}
