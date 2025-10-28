@@ -3,6 +3,7 @@ from unittest.mock import Mock
 from src.gerador_dados.modelos import ConfigGeradorRegex, ConfigGeradorGaussiano, ConfigGeradorLinear, ConfiguracaoColuna, ConfiguracaoCSV
 from src.gerador_dados.geradores import GeradorRegex, GeradorGaussiano, GeradorLinear
 from src.gerador_dados.servicos import get_gerador, SistemaGerador
+from src.gerador_dados.utils_csv import converter_para_csv_string
 
 # Testes para as Strategies (Geradores)
 
@@ -96,3 +97,29 @@ def test_sistema_gerador():
     # Verifica se os mocks foram chamados o número correto de vezes
     assert mock_gerador_a.gerarValor.call_count == 5
     assert mock_gerador_b.gerarValor.call_count == 5
+
+
+def test_conversor_csv_string_delimitador_separador_customizados():
+    """Testa o serializador CSV (Fase 4) com delimitador ';' e separador ',' (RF09)."""
+
+    # 1. Arrange
+    nomes_colunas = ["Produto", "Preco"]
+    dados = [
+        {"Produto": "Item A", "Preco": 123.45},
+        {"Produto": "Item B; com ponto-e-virgula", "Preco": 9.99}
+    ]
+
+    # 2. Act
+    csv_string = converter_para_csv_string(
+        dados,
+        nomes_colunas,
+        delimitador=";",
+        separadorDecimal=","
+    )
+
+    # 3. Assert
+    linhas = csv_string.strip().split('\r\n')
+    assert linhas[0] == 'Produto;Preco' # Delimitador ;
+    assert linhas[1] == 'Item A;123,45' # Separador ,
+    # O módulo CSV adiciona aspas se o delimitador estiver no campo
+    assert linhas[2] == '"Item B; com ponto-e-virgula";9,99'

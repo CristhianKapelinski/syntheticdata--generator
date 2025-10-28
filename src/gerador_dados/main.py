@@ -38,8 +38,12 @@ async def gerar_csv(config: ConfiguracaoCSV):
         dados_gerados = gerador.gerar_dados()
         
         # 3. Converte os dados para uma string CSV (Fase 4)
-        csv_string = converter_para_csv_string(dados_gerados, gerador.nomes_colunas)
-        
+        csv_string = converter_para_csv_string(
+            dados_gerados,
+            gerador.nomes_colunas,
+            delimitador=config.delimitador,
+            separadorDecimal=config.separadorDecimal
+        )        
         # 4. Cria um buffer de 'bytes' para a resposta
         buffer = io.BytesIO(csv_string.encode("utf-8"))
         

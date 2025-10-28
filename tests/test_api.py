@@ -29,7 +29,7 @@ def test_gerar_csv_caminho_feliz():
     # Verifica se temos 101 linhas (1 cabeçalho + 100 de dados)
     assert len(lines) == 101
     # Verifica o cabeçalho
-    assert lines[0] == "ID_USUARIO,PONTUACAO_RISCO"
+    assert lines[0] == "ID_USUARIO;PONTUACAO_RISCO;SEQUENCIA_LINEAR"
 
 
 def test_falha_validacao_regex_invalida():
@@ -114,3 +114,52 @@ def test_gerar_csv_com_gerador_linear():
     assert lines[3] == "120.0"
     assert lines[4] == "130.0"
     assert lines[5] == "140.0"
+
+
+def test_gerar_csv_com_delimitador_personalizado():
+    """
+    Testa a geração de CSV com um delimitador de coluna personalizado (RF09).
+    """
+    config = {
+        "numLinhas": 2,
+        "colunas": [
+            {"nome": "COL1", "configGerador": {"tipoGerador": "regex", "expressao": "A"}},
+            {"nome": "COL2", "configGerador": {"tipoGerador": "regex", "expressao": "B"}}
+        ],
+        "delimitador": ";"
+    }
+
+    response = client.post("/gerar-csv", json=config)
+
+    assert response.status_code == 200
+    content = response.text
+    lines = content.strip().split('\r\n')
+
+    assert len(lines) == 3  # 1 cabeçalho + 2 linhas
+    assert lines[0] == "COL1;COL2"
+    assert lines[1] == "A;B"
+    assert lines[2] == "A;B"
+
+
+def test_gerar_csv_com_separador_decimal_personalizado():
+    """
+    Testa a geração de CSV com um separador decimal personalizado (RF09).
+    """
+    config = {
+        "numLinhas": 2,
+        "colunas": [
+            {"nome": "VALOR", "configGerador": {"tipoGerador": "linear", "valorInicial": 1.5, "incremento": 1.0}}
+        ],
+        "separadorDecimal": ","
+    }
+
+    response = client.post("/gerar-csv", json=config)
+
+    assert response.status_code == 200
+    content = response.text
+    lines = content.strip().split('\r\n')
+
+    assert len(lines) == 3  # 1 cabeçalho + 2 linhas
+    assert lines[0] == "VALOR"
+    assert lines[1] == "\"1,5\""
+    assert lines[2] == "\"2,5\""

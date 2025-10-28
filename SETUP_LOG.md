@@ -92,4 +92,13 @@ Após a configuração inicial, o plano foi alterado para desenvolver uma API we
 - Um teste de integração para a API foi adicionado em `tests/test_api.py` para validar a geração de dados com o gerador linear.
 - Todos os 9 testes da suíte foram executados e passaram com sucesso, confirmando a correta implementação da nova funcionalidade.
 
+### Fase 8: Evolução - Delimitadores e Separadores Decimais (RF09)
+- Os campos `delimitador` e `separadorDecimal` foram adicionados ao modelo `ConfiguracaoCSV` em `src/gerador_dados/modelos.py`.
+- A função `converter_para_csv_string` em `src/gerador_dados/utils_csv.py` foi modificada para aceitar e utilizar os novos parâmetros de delimitador e separador decimal.
+- O endpoint `gerar_csv` em `src/gerador_dados/main.py` foi atualizado para passar os valores de `delimitador` e `separadorDecimal` da configuração para a função de conversão CSV.
+- Novos testes de integração foram adicionados em `tests/test_api.py` para validar a funcionalidade de delimitadores e separadores decimais personalizados.
+- Um erro de indentação em `src/gerador_dados/main.py` foi corrigido.
+- Um erro nos testes de API foi corrigido para refletir as mudanças no `config/exemplo.json` e o comportamento de citação de campos do `csv.DictWriter`.
+- Todos os 11 testes da suíte foram executados e passaram com sucesso, confirmando a correta implementação da nova funcionalidade.
+
 O projeto continua evoluindo com novas funcionalidades e cobertura de testes robusta.

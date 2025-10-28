@@ -15,6 +15,16 @@
         "media": 150.5,
         "desvioPadrao": 25.0
       }
+    },
+    {
+      "nome": "SEQUENCIA_LINEAR",
+      "configGerador": {
+        "tipoGerador": "linear",
+        "valorInicial": 10,
+        "incremento": 0.5
+      }
     }
-  ]
+  ],
+  "delimitador": ";",
+  "separadorDecimal": ","
 }

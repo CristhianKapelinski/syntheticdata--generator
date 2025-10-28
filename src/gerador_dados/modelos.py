@@ -63,6 +63,8 @@ class ConfiguracaoCSV(BaseModel):
     # Garante que o número de linhas seja um inteiro > 0 (RF05)
     numLinhas: PositiveInt
     colunas: list[ConfiguracaoColuna]
+    delimitador: str = ","
+    separadorDecimal: str = "."
 
     @field_validator("colunas")
     @classmethod
