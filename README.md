@@ -122,7 +122,13 @@ A aplicação estará disponível em: **[http://localhost:8000](https://www.goog
       * **Se houver erro:** Uma mensagem vermelha aparecerá indicando o problema (ex: "Expressão regular com sintaxe inválida").
       * **Se houver sucesso:** O download do arquivo `dados_sinteticos.csv` iniciará automaticamente.
 
-## 8\. 📁 Estrutura do Projeto
+## 8\. 🖼️ Interface da Aplicação
+
+![Interface da Aplicação](documentacao/image.png)
+
+A interface web oferece uma experiência intuitiva para configuração e geração de dados sintéticos, permitindo ao usuário definir colunas dinamicamente e visualizar o resultado em tempo real.
+
+## 9\. 📁 Estrutura do Projeto
 
 O código-fonte é modular e segue os princípios de separação de responsabilidades.
 
@@ -150,7 +156,7 @@ O código-fonte é modular e segue os princípios de separação de responsabili
 └── README.md              # Este arquivo
 ```
 
-## 9\. 🧪 Executando os Testes
+## 10\. 🧪 Executando os Testes
 
 Para garantir a qualidade e a confiabilidade do código, execute a suíte de testes com o Pytest:
 
@@ -163,12 +169,12 @@ Os testes cobrem:
   * **Testes Unitários (`test_core.py`):** Validam cada gerador (Strategy) isoladamente e a função `get_gerador` (Factory).
   * **Testes de Integração (`test_api.py`):** Testam a API (`/gerar-csv`) de ponta a ponta, incluindo o "caminho feliz", falhas de validação (RF05) e a correta aplicação de delimitadores (RF09).
 
-## 10\. 👥 Autores
+## 11\. 👥 Autores
 
   * **Cristhian Eduardo Kapelinski de Avilla** 
   * **Rafael da Silva Moral** 
   * **Lucas Correa Rodrigues** 
 
-## 11\. 📄 Licença
+## 12\. 📄 Licença
 
 Este projeto é distribuído sob a Licença APACHE.
