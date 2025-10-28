@@ -68,7 +68,7 @@
 
 ### 🧪 Fase 6: Testes Automatizados (Próxima Fase)
 
-* **Status:** ⏸️ **Planejada (Próxima Etapa)**
+* **Status:** ✅ **Concluída**
 * **Objetivo:** Garantir a **RNF04 (Confiabilidade)** do MVP, validando todas as camadas de forma automatizada.
 * **O que será feito:**
     1.  Adicionar `httpx` como dependência de desenvolvimento (necessário para o `TestClient` do FastAPI).
@@ -82,7 +82,7 @@
 
 ### 📈 Fase 7: Evolução (Requisitos "Should Have")
 
-* **Status:** ⏸️ **Planejada**
+* **Status:** ✅ **Concluída**
 * **Objetivo:** Implementar requisitos de prioridade média, como **RF06 (Tendência Linear)** e **RF07 (Combinação de tipos)** (já suportado pela arquitetura).
 * **O que será feito:**
     1.  **Modelos (Fase 1):** Adicionar `ConfigGeradorLinear` ao DTO `ConfiguracaoColuna`.
@@ -92,7 +92,7 @@
 
 ### ⚛️ Fase 8: Evolução (Requisitos "Could Have")
 
-* **Status:** ⏸️ **Planejada**
+* **Status:** ✅ **Concluída**
 * **Objetivo:** Implementar requisitos de baixa prioridade e preparar para extensibilidade futura, como **RF08 (Novas distribuições)** e **RF09 (Delimitadores)**.
 * **O que será feito:**
     1.  **RF08:** Seguir o mesmo processo da Fase 7 (adicionar nova *Strategy* e atualizar *Factory*).
