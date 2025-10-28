@@ -36,10 +36,17 @@ class ConfigGeradorGaussiano(BaseModel):
     desvioPadrao: PositiveFloat
 
 
+class ConfigGeradorLinear(BaseModel):
+    """Configuração para dados com tendência linear (RF06)."""
+    tipoGerador: Literal["linear"] = "linear"
+    valorInicial: float
+    incremento: float
+
+
 # Este tipo especial usa o campo 'tipoGerador' para decidir
 # qual modelo (Regex ou Gaussiano) deve ser usado para validar.
 TipoGeradorConfig = Annotated[
-    Union[ConfigGeradorRegex, ConfigGeradorGaussiano],
+    Union[ConfigGeradorRegex, ConfigGeradorGaussiano, ConfigGeradorLinear],
     Field(discriminator="tipoGerador")
 ]
 

@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock
-from src.gerador_dados.modelos import ConfigGeradorRegex, ConfigGeradorGaussiano, ConfiguracaoColuna, ConfiguracaoCSV
-from src.gerador_dados.geradores import GeradorRegex, GeradorGaussiano
+from src.gerador_dados.modelos import ConfigGeradorRegex, ConfigGeradorGaussiano, ConfigGeradorLinear, ConfiguracaoColuna, ConfiguracaoCSV
+from src.gerador_dados.geradores import GeradorRegex, GeradorGaussiano, GeradorLinear
 from src.gerador_dados.servicos import get_gerador, SistemaGerador
 
 # Testes para as Strategies (Geradores)
@@ -22,6 +22,16 @@ def test_gerador_gaussiano():
     valor = gerador.gerarValor()
     assert isinstance(valor, float)
 
+
+def test_gerador_linear():
+    """Testa o gerador linear isoladamente."""
+    config = ConfigGeradorLinear(valorInicial=10, incremento=2)
+    gerador = GeradorLinear(config)
+    assert gerador.gerarValor() == 10
+    assert gerador.gerarValor() == 12
+    assert gerador.gerarValor() == 14
+
+
 # Teste para a Factory
 
 def test_get_gerador_factory():
@@ -33,6 +43,10 @@ def test_get_gerador_factory():
     config_gaussiano = ConfigGeradorGaussiano(media=0, desvioPadrao=1)
     gerador_gaussiano = get_gerador(config_gaussiano)
     assert isinstance(gerador_gaussiano, GeradorGaussiano)
+
+    config_linear = ConfigGeradorLinear(valorInicial=0, incremento=1)
+    gerador_linear = get_gerador(config_linear)
+    assert isinstance(gerador_linear, GeradorLinear)
 
     # Testa um tipo de gerador inválido (não deve acontecer na prática)
     with pytest.raises(ValueError):

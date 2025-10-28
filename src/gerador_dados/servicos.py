@@ -1,5 +1,5 @@
 from .modelos import ConfiguracaoCSV, ConfiguracaoColuna, TipoGeradorConfig
-from .geradores import GeradorDados, GeradorRegex, GeradorGaussiano
+from .geradores import GeradorDados, GeradorRegex, GeradorGaussiano, GeradorLinear
 
 
 def get_gerador(config_gerador: TipoGeradorConfig) -> GeradorDados:
@@ -12,6 +12,8 @@ def get_gerador(config_gerador: TipoGeradorConfig) -> GeradorDados:
         return GeradorRegex(config_gerador)
     elif config_gerador.tipoGerador == "gaussiano":
         return GeradorGaussiano(config_gerador)
+    elif config_gerador.tipoGerador == "linear":
+        return GeradorLinear(config_gerador)
     else:
         # Isso não deve acontecer se a validação do Pydantic (Fase 1)
         # estiver funcionando.

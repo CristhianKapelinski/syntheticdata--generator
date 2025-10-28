@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 # Importa nossos modelos de configuração da Fase 1
-from .modelos import ConfigGeradorRegex, ConfigGeradorGaussiano
+from .modelos import ConfigGeradorRegex, ConfigGeradorGaussiano, ConfigGeradorLinear
 
 class GeradorDados(ABC):
     """Classe base abstrata (Interface) para todos os geradores."""
@@ -33,3 +33,16 @@ class GeradorGaussiano(GeradorDados):
     def gerarValor(self) -> float:
         """Gera um número float da distribuição normal."""
         return float(np.random.normal(self.media, self.desvio))
+
+
+class GeradorLinear(GeradorDados):
+    """Gera dados com incremento linear a cada chamada (RF06)."""
+    def __init__(self, config: ConfigGeradorLinear):
+        self.valor_atual = config.valorInicial
+        self.incremento = config.incremento
+
+    def gerarValor(self) -> float:
+        """Gera o próximo valor na sequência linear."""
+        valor = self.valor_atual
+        self.valor_atual += self.incremento
+        return valor

@@ -79,3 +79,38 @@ def test_falha_validacao_desvio_padrao_negativo():
     assert response.status_code == 422
     # Verifica se a mensagem de erro indica que o input deve ser > 0
     assert "Input should be greater than 0" in response.text
+
+
+def test_gerar_csv_com_gerador_linear():
+    """
+    Testa a geração de CSV com o novo gerador linear.
+    """
+    config = {
+        "numLinhas": 5,
+        "colunas": [
+            {
+                "nome": "SEQUENCIA",
+                "configGerador": {
+                    "tipoGerador": "linear",
+                    "valorInicial": 100,
+                    "incremento": 10
+                }
+            }
+        ]
+    }
+
+    response = client.post("/gerar-csv", json=config)
+
+    assert response.status_code == 200
+    assert "text/csv" in response.headers["content-type"]
+
+    content = response.text
+    lines = content.strip().split('\r\n')
+
+    assert len(lines) == 6  # 1 cabeçalho + 5 linhas
+    assert lines[0] == "SEQUENCIA"
+    assert lines[1] == "100.0"
+    assert lines[2] == "110.0"
+    assert lines[3] == "120.0"
+    assert lines[4] == "130.0"
+    assert lines[5] == "140.0"
