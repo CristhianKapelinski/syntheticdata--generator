@@ -101,4 +101,18 @@ Após a configuração inicial, o plano foi alterado para desenvolver uma API we
 - Um erro nos testes de API foi corrigido para refletir as mudanças no `config/exemplo.json` e o comportamento de citação de campos do `csv.DictWriter`.
 - Todos os 11 testes da suíte foram executados e passaram com sucesso, confirmando a correta implementação da nova funcionalidade.
 
+## Fase 9: Correções e Melhorias na Interface do Usuário
+
+Nesta fase, foram realizadas correções de bugs e melhorias na interface do usuário para aprimorar a experiência de uso da aplicação.
+
+-   **Correção do Download do CSV:** Foi corrigido um bug no arquivo `templates/index.html` que impedia o download do arquivo CSV gerado. O problema era que o elemento `<a>` de download era removido do DOM antes que o evento de clique pudesse ser disparado. A correção envolveu adicionar `a.click()` antes de `a.remove()`.
+
+-   **Melhoria na Usabilidade do Campo Regex:** Para tornar o uso do gerador de regex mais intuitivo, foram feitas as seguintes melhorias no `templates/index.html`:
+    -   Adicionado um `placeholder` ao campo de expressão regular com um exemplo de formato (`ex: \d{3}\.\d{3}\.\d{3}-\d{2}`).
+    -   Incluído um texto descritivo abaixo do campo para guiar o usuário sobre a sintaxe de regex esperada (Python) e fornecer exemplos práticos como CPF e CEP.
+
+-   **Correção da Configuração do Gerador Linear:** Foi identificado e corrigido um erro de incompatibilidade entre o frontend e o backend para o gerador linear. O formulário em `templates/index.html` enviava os campos `coeficienteAngular` and `coeficienteLinear`, enquanto o modelo Pydantic no backend esperava `incremento` e `valorInicial`. Os nomes dos campos e os rótulos no formulário foram atualizados para corresponder ao backend.
+
+-   **Atualização da Documentação (README.md):** O arquivo `README.md` foi atualizado para incluir uma nova seção com exemplos de expressões regulares, como CPF, CEP, IPv4, e-mail, etc. Isso ajuda os usuários a entenderem como utilizar o gerador de regex de forma eficaz.
+
 O projeto continua evoluindo com novas funcionalidades e cobertura de testes robusta.
