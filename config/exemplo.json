@@ -1,0 +1,20 @@
+{
+  "numLinhas": 100,
+  "colunas": [
+    {
+      "nome": "ID_USUARIO",
+      "configGerador": {
+        "tipoGerador": "regex",
+        "expressao": "USER_[A-Z0-9]{8}"
+      }
+    },
+    {
+      "nome": "PONTUACAO_RISCO",
+      "configGerador": {
+        "tipoGerador": "gaussiano",
+        "media": 150.5,
+        "desvioPadrao": 25.0
+      }
+    }
+  ]
+}
