@@ -100,7 +100,7 @@ O `index.html` com Alpine.js implementa uma versão leve do padrão MVVM.
 
 ## 4. ✅ Análise de Requisitos (Implementado vs. Especificado)
 
-Abaixo está um mapeamento detalhado de cada requisito do `Engenharia_de_software.pdf` para sua implementação no código.
+Abaixo está um mapeamento detalhado de cada requisito do documento de especificação de requisitos para o sistema desenvolvido.
 
 ### 4.1. Must Have (Essencial) - 100% Implementado
 
