@@ -1,0 +1,46 @@
+[project]
+name = "syntheticdata-generator"
+version = "0.1.0"
+description = "Plataforma para geração de dados sintéticos com alta flexibilidade."
+authors = [
+    {name = "Cristhian Kapelinski, Rafael da silva Moral, Lucas Correa Rodrigues",email = "cristhianavila.aluno@unipampa.edu.br"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic (>=2.12.3,<3.0.0)",
+    "numpy (>=2.3.4,<3.0.0)",
+    "rstr (>=3.2.2,<4.0.0)",
+    "fastapi (>=0.120.1,<0.121.0)"
+]
+
+[tool.poetry]
+packages = [{include = "gerador_dados", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=8.4.2,<9.0.0)",
+    "ruff (>=0.14.2,<0.15.0)",
+    "uvicorn[standard] (>=0.38.0,<0.39.0)"
+]
+
+[tool.ruff]
+# Define o comprimento máximo da linha (padrão do Black)
+line-length = 88
+
+[tool.ruff.lint]
+# Seleciona quais regras de lint ativar:
+# E/W: Erros e Avisos (padrão Flake8)
+# F: Erros lógicos (Pyflakes)
+# I: Ordenação de imports (isort)
+# UP: Modernização de código (pyupgrade)
+select = ["E", "W", "F", "I", "UP"]
+
+[tool.ruff.format]
+# Força o uso de aspas duplas " "
+quote-style = "double"
