@@ -21,10 +21,13 @@ app = FastAPI(
 
 # Configura a pasta de templates
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "..", "templates"))
+templates_dir = os.path.join(BASE_DIR, "..", "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
-# Monta a pasta estática (opcional por enquanto, mas boa prática)
-app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "..", "static")), name="static")
+# Monta a pasta estática apenas se ela existir, para evitar erros na inicialização
+static_dir = os.path.join(BASE_DIR, "..", "static")
+if os.path.isdir(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
