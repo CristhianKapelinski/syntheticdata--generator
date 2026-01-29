@@ -188,5 +188,3 @@ The tests cover:
 This project is distributed under the Apache License.
 
 ```
-
-```
